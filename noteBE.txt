@@ -1,0 +1,7 @@
+This is note of BackEnd folder
+-------------------------
+Lineup :
+Thanh Long (Lead BE)
+Trung Nam (BE)
+Thai Son (BE)
+-------------------------

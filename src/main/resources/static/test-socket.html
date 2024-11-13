@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Test</title>
+    <meta http-equiv="socket-token" content="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25sYWkxQGdtYWlsLmNvbSIsImlhdCI6MTcyODM5NjczMywiZXhwIjoxNzI4NDgzMTMzfQ.owLoNyRepIQhtzKENwlxOg3zwKTsRIYJin61RaS6XKWqsZ-Y4k4oNR_QMFHkQdlSdjMrH8zddBrnXTtB_eeX_g">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #messages {
+            list-style-type: none;
+            padding: 0;
+        }
+        #messages li {
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Socket.IO Test</h1>
+<ul id="messages"></ul>
+
+<input type="text" id="event-input" placeholder="Enter event name" />
+<button id="listen-button">Listen to Event</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+    const socketToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25sYWkxQGdtYWlsLmNvbSIsImlhdCI6MTcyODQ1MjI5OCwiZXhwIjoxNzI4NTM4Njk4fQ.XOHIPM-Om086ibdEp0JNbu7zAiHh0PYg3uMSS_RIsL_Hxg7i2ePFmj4yDOrhcF6zyJmLvBubIahENEaQYNuHwg';
+
+    const socket = io('http://localhost:8081', {
+        headers: {
+            'socket-token': socketToken
+        }
+    });
+
+    if (typeof io !== 'undefined') {
+        socket.on('message', (message) => {
+            const messages = document.getElementById('messages');
+            const messageElement = document.createElement('li');
+            messageElement.textContent = message;
+            messages.appendChild(messageElement);
+        });
+
+        document.getElementById('listen-button').addEventListener('click', () => {
+            const inputValue = document.getElementById('event-input').value;
+            const eventName = 'Event_' + inputValue; // Prefix with "Event_"
+            if (inputValue) {
+                socket.on(eventName, (data) => {
+                    console.log('Received data from specific event:', data);
+                    alert('Received data from specific event: ' + data);
+                });
+            } else {
+                alert('Please enter an event name.');
+            }
+        });
+    } else {
+        console.error('Socket.IO library not loaded!');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+version: "4.0"
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd123
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    networks:
+      - mynet
+    volumes:
+      - db-data:/var/opt/mssql
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    hostname: redis
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB;FLUSHALL
+    networks:
+      - mynet
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://db:1433;databaseName=koi_project;encrypt=true;trustServerCertificate=true
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=P@ssw0rd123
+    networks:
+      - mynet
+
+  tools:
+    image: mcr.microsoft.com/mssql-tools:latest
+    depends_on:
+      - db
+    command: ["bash", "-c", "sleep 10 && /opt/mssql-tools/bin/sqlcmd -S db -U sa -P P@ssw0rd123 -Q 'CREATE DATABASE koi_project'"]
+    networks:
+      - mynet
+
+volumes:
+  db-data:
+
+networks:
+  mynet:
+    driver: bridge

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koi Auction Notifications</title>
+    <!-- Include Firebase App -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseconfig = {
+            apiKey: "AIzaSyAGrmgZPIZeO4yD1ng6RSyRu0GgapNB-YE",
+            authDomain: "swptest-7f1bb.firebaseapp.com",
+            databaseURL: "https://swptest-7f1bb-default-rtdb.firebaseio.com",
+            projectId: "swptest-7f1bb",
+            storageBucket: "swptest-7f1bb.appspot.com",
+            messagingSenderId: "312264882389",
+            appId: "1:312264882389:web:cff6e4f72e3eb201518a5c",
+            measurementId: "G-5DFMCPBY4W"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseconfig);
+        const messaging = firebase.messaging();
+
+        // Request permission to send notifications
+        function requestPermission() {
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                    getToken();
+                } else {
+                    console.log('Unable to get permission to notify.');
+                }
+            }).catch((err) => {
+                console.error('Error requesting notification permission: ', err);
+            });
+        }
+
+        // Get FCM registration token
+        function getToken() {
+            messaging.getToken({ vapidKey: 'BD0-JWIbZUQTgjrvMX73egd8tqDXECe_GGG_xDsrqbCwber3dpU3KsJW9Q0xAoj4OAd7H5UU-lQ-SYbIQifVA_c'})
+                .then((currentToken) => {
+                    if (currentToken) {
+                        console.log('Token retrieved:', currentToken);
+                        // Send the token to your backend
+                        sendTokenToServer(currentToken);
+                    } else {
+                        console.log('No registration token available. Request permission to generate one.');
+                        requestPermission();
+                    }
+                }).catch((err) => {
+                console.error('An error occurred while retrieving token: ', err);
+            });
+        }
+
+        // Send the token to your server
+        function sendTokenToServer(token) {
+            fetch('http://localhost:8080/notification/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25sYWkxQGdtYWlsLmNvbSIsImlhdCI6MTcyODYyMzc2MywiZXhwIjoxNzI4NzEwMTYzfQ.griX0ElUcTjvuhhi_EcHNclnnQdfWsf-exA7SIoECsOutLy4zHWfhv615n4YdBDbDrNXeM29kp_luWhyK7Pm1Q'
+                },
+                body: JSON.stringify({
+                    lotId: '1',
+                    token: token.toString()
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error sending token to the server:', error);
+                });
+        }
+
+        // Delete FCM token (unsubscribe)
+        function deleteToken() {
+            messaging.getToken().then((currentToken) => {
+                if (currentToken) {
+                    messaging.deleteToken(currentToken).then(() => {
+                        console.log('Token deleted successfully.');
+                    }).catch((err) => {
+                        console.error('Error deleting token:', err);
+                    });
+                } else {
+                    console.log('No token to delete.');
+                }
+            }).catch((err) => {
+                console.error('Error retrieving token for deletion: ', err);
+            });
+        }
+
+        // Handle incoming messages
+        messaging.onMessage((payload) => {
+            console.log('Received message:', payload);
+            const notificationTitle = payload.notification.title;
+            const notificationOptions = {
+                body: payload.notification.body,
+                icon: 'https://firebasestorage.googleapis.com/v0/b/student-management-41928.appspot.com/o/PrestigeKoi_White.png?alt=media&token=9840e031-fac3-4e31-a789-c2e4f3247e60',
+            };
+
+            if (Notification.permission === 'granted') {
+                new Notification(notificationTitle, notificationOptions);
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        new Notification(notificationTitle, notificationOptions);
+                    }
+                });
+            }
+        });
+
+        // Initialize the service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered', registration);
+                    registration.update();
+                    requestPermission(); // Request notification permission after registration
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Koi Auction Web Push Notifications</h1>
+<button onclick="requestPermission()">Enable Notifications</button>
+<button onclick="deleteToken()">Unsubscribe Notifications</button>
+</body>
+</html>
