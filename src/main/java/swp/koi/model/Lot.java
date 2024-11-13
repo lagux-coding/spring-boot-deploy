@@ -56,7 +56,7 @@ public class Lot {
     @Column(nullable = false)
     LotStatusEnum status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     KoiFish koiFish;
 
     @OneToMany(mappedBy = "lot", fetch = FetchType.LAZY)

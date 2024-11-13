@@ -51,6 +51,7 @@ public class LotServiceImpl implements LotService {
                 .orElseThrow(() -> new KoiException(ResponseCode.LOT_NOT_FOUND));
     }
 
+
     @Override
     @Async
     @Scheduled(fixedRate = 1000 * 5)
