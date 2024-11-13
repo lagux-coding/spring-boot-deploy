@@ -28,11 +28,11 @@ public class VnpayController {
 
         if (isResponseValid) {
             vnpayService.handlePayment(request);
-            return new ResponseEntity<>("Payment successful",HttpStatus.OK);
-//            URI redirect = URI.create("https://prestigekoiauction.netlify.app/deposit-success");
-//            return ResponseEntity.status(HttpStatus.FOUND)
-//                    .location(redirect)
-//                    .build();
+//            return new ResponseEntity<>("Payment successful",HttpStatus.OK);
+            URI redirect = URI.create("https://prestigekoiauction.netlify.app/payment-success");
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(redirect)
+                    .build();
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong with this response");
     }
