@@ -24,8 +24,7 @@ public class BidEntityToDtoConverter {
                     MemberResponseDto memberDto = new MemberResponseDto();
                     memberDto.setAccount(accountEntityToDtoConverter
                             .convertAccount(bid.getMember().getAccount()));
-                    System.out.println(bid.getMember().getMemberId());
-                    dto.getMember().setMemberId(bid.getMember().getMemberId());
+                    memberDto.setMemberId(bid.getMember().getMemberId());
                     dto.setMember(memberDto);
                     return dto;
                 })
