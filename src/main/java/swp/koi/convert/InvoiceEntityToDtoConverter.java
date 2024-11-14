@@ -26,6 +26,7 @@ public class InvoiceEntityToDtoConverter {
                     dto.getKoiFish().setImageUrl(invoice.getKoiFish().getMedia().getImageUrl());
                     dto.getKoiFish().setVideoUrl(invoice.getKoiFish().getMedia().getVideoUrl());
                     dto.setMember(memberEntityToDtoConverter.convertMember(invoice.getMember()));
+                    dto.setLotId(invoice.getLot().getLotId());
                     return dto;
                 })
                 .collect(Collectors.toList());

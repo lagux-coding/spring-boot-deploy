@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class InvoiceResponseDto {
 
     Integer invoiceId;
+    Integer lotId;
     float finalAmount;
     LocalDateTime invoiceDate;
     float tax;
