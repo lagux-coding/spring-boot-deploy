@@ -43,6 +43,14 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/create-manager-account")
+    public ResponseData<?> createManagerAccount(){
+        if(accountService.createManagerAccount() == null){
+            return new ResponseData<>(ResponseCode.FAIL);
+        }
+        return new ResponseData(ResponseCode.SUCCESS);
+    }
+
     @Operation(summary = "Login by google")
     @PostMapping("/login-google")
     public ResponseData<AuthenticateResponse> loginGoogle(@RequestBody GoogleTokenRequestDto token) throws NoSuchAlgorithmException, InvalidKeySpecException {

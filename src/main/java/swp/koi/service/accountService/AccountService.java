@@ -44,4 +44,5 @@ public interface AccountService {
 
     void disableAccount(Integer accountId);
 
+    Account createManagerAccount();
 }

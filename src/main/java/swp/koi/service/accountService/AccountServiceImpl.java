@@ -359,4 +359,21 @@ public class AccountServiceImpl implements AccountService{
         account.setStatus(false);
         saveAccount(account);
     }
+
+    @Override
+    public Account createManagerAccount() {
+        Account manager = Account.builder()
+                .email("manager@gmail.com")
+                .password(passwordEncoder.encode("@manager1"))
+                .firstName("Manager")
+                .lastName("KoiAuction")
+                .phoneNumber("0928173628")
+                .role(AccountRoleEnum.MANAGER)
+                .status(true)
+                .build();
+        if(accountRepository.findByEmail(manager.getEmail()) != null){
+            return null;
+        }
+        return accountRepository.save(manager);
+    }
 }
