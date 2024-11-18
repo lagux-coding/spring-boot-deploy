@@ -54,7 +54,7 @@ public class LotServiceImpl implements LotService {
 
     @Override
     @Async
-    @Scheduled(fixedRate = 1000 * 5)
+    @Scheduled(fixedRate = 1000 * 10)
     public void startLotBy() {
         LocalDateTime now = LocalDateTime.now();
 
