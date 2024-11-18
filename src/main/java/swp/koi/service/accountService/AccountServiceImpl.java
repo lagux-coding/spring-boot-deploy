@@ -371,7 +371,7 @@ public class AccountServiceImpl implements AccountService{
                 .role(AccountRoleEnum.MANAGER)
                 .status(true)
                 .build();
-        if(accountRepository.findByEmail("manager@gmail.com").isEmpty()){
+        if(!accountRepository.findByEmail("manager@gmail.com").isEmpty()){
             return null;
         }
         return accountRepository.save(manager);
