@@ -39,6 +39,11 @@ public class InvoiceController {
     public ResponseData<List<InvoiceResponseDto>> getAllInvoicesOfMember() {
         try {
             List<InvoiceResponseDto> response = invoiceEntityToDtoConverter.convertInvoiceList(invoiceService.getAllInvoicesForAuctionWinner());
+
+            List<Invoice> list = invoiceService.getAllInvoicesForAuctionWinner();
+
+           
+
             return new ResponseData<>(ResponseCode.SUCCESS, response);
         } catch (KoiException e) {
             throw new KoiException(ResponseCode.MEMBER_NOT_FOUND);

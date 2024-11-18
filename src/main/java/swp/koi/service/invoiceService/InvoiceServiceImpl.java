@@ -103,7 +103,12 @@ public class InvoiceServiceImpl implements InvoiceService{
 
         Member member = getUserInfoByUsingAuth.getMemberFromAuth();
 
-        return invoiceRepository.findAllByMember(member);
+        List<Invoice> list = invoiceRepository.findAllByMember(member);
+        for(Invoice inv : list){
+            inv.setFinalAmount(inv.getFinalAmount() * 2);
+        }
+
+        return list;
     }
 
     @Override
