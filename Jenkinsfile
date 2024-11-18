@@ -5,7 +5,6 @@ pipeline {
         maven 'my-maven'
     }
     environment {
-        DB_URL = credentials('db-url')
         DB_USERNAME = credentials('db-username')
         DB_PASSWORD = credentials('db-password')
         MAIL_USERNAME = credentials('mail-username')
@@ -72,7 +71,6 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo "Deploying application with the following environment variables:"
-                echo "DB_URL: $DB_URL"
                 echo "DB_USERNAME: $DB_USERNAME"
                 echo "DB_PASSWORD: $DB_PASSWORD"
                 echo "MAIL_USERNAME: $MAIL_USERNAME"
