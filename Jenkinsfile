@@ -31,22 +31,22 @@ pipeline {
             }
         }
 
-        stage('Deploy SQL Server') {
-            steps {
-                echo 'Deploying SQL Server and cleaning'
-                sh 'docker pull mcr.microsoft.com/mssql/server:2019-latest'
-                sh 'docker network create dev || echo "This network already exists"'
-                sh 'docker stop mssql || true'
-                sh 'docker rm mssql || true'
-                sh """
-                docker run -d --name mssql --network dev \
-                -e ACCEPT_EULA=Y \
-                -e SA_PASSWORD=$DB_PASSWORD \
-                -p 1433:1433 \
-                mcr.microsoft.com/mssql/server:2019-latest
-                """
-            }
-        }
+//         stage('Deploy SQL Server') {
+//             steps {
+//                 echo 'Deploying SQL Server and cleaning'
+//                 sh 'docker pull mcr.microsoft.com/mssql/server:2019-latest'
+//                 sh 'docker network create dev || echo "This network already exists"'
+//                 sh 'docker stop mssql || true'
+//                 sh 'docker rm mssql || true'
+//                 sh """
+//                 docker run -d --name mssql --network dev \
+//                 -e ACCEPT_EULA=Y \
+//                 -e SA_PASSWORD=$DB_PASSWORD \
+//                 -p 1433:1433 \
+//                 mcr.microsoft.com/mssql/server:2019-latest
+//                 """
+//             }
+//         }
 
         stage('Deploy Redis') {
                     steps {
